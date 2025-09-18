@@ -19,7 +19,7 @@ struct ContentView: View {
         .padding()
     }
 }
-// t
+
 struct CardView: View {
     var isFaceUp: Bool = false
     
