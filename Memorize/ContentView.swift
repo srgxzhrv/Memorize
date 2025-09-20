@@ -14,11 +14,12 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            Text("Memorize!")
+                .font(.title)
             ScrollView {
                 cards
             }
             Spacer()
-            cardCountAdjusters
         }
         
         .padding()
@@ -32,33 +33,6 @@ struct ContentView: View {
             }
         }
         .foregroundColor(.orange)
-    }
-    
-    var cardCountAdjusters: some View {
-        HStack {
-            cardRemover
-            Spacer()
-            cardAdder
-        }
-        .imageScale(.large)
-        .font(.largeTitle)
-    }
-    
-    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-        Button(action: {
-            cardCount += offset
-        }, label: {
-            Image(systemName: symbol)
-        })
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-    }
-    
-    var cardRemover: some View {
-        cardCountAdjuster(by: -1, symbol: "rectangle.stack.badge.minus.fill")
-    }
-    
-    var cardAdder: some View {
-        cardCountAdjuster(by: 1, symbol: "rectangle.stack.badge.plus.fill")
     }
 }
 
@@ -80,6 +54,14 @@ struct CardView: View {
         .onTapGesture {
             isFaceUp.toggle()
         }
+    }
+}
+
+struct CardTheme: View {
+    
+    
+    var body: some View {
+        
     }
 }
 
