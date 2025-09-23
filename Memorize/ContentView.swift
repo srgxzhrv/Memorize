@@ -8,31 +8,96 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojis = ["👻", "🎃", "🕷️", "😈", "💀", "🧙‍♀️", "🙀", "👹", "😱", "☠️", "🍭"]
     
-    @State var cardCount = 4
+    @State var currentTheme = Theme(
+        name: "Halloween",
+        emojis: [],
+        color: .orange
+    )
+    
+    @State var gameCards: [String] = []
+    
+    func generateCards() {
+        gameCards = currentTheme.emojis.flatMap { [$0, $0] }.shuffled()
+    }
     
     var body: some View {
         VStack {
             Text("Memorize!")
-                .font(.title)
+                .font(.largeTitle)
             ScrollView {
                 cards
             }
             Spacer()
+            HStack {
+                Button(action: { selectTheme(.halloween) }) {
+                    VStack {
+                        Image(systemName: "moon.haze.fill")
+                            .font(.title)
+                        Text("Halloween")
+                            .font(.caption)
+                    }
+                }
+                Spacer()
+                Button(action: { selectTheme(.food) }) {
+                    VStack {
+                        Image(systemName: "frying.pan.fill")
+                            .font(.title)
+                        Text("Food")
+                            .font(.caption)
+                    }
+                }
+                Spacer()
+                Button(action: { selectTheme(.animals) }) {
+                    VStack {
+                        Image(systemName: "pawprint.fill")
+                            .font(.title)
+                        Text("Animals")
+                            .font(.caption)
+                    }
+                }
+            }
+            .padding(.horizontal)
         }
-        
         .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
-            ForEach(0..<cardCount, id: \.self) { index in
-                CardView(content: emojis[index])
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+            ForEach(gameCards.indices, id: \.self) { index in
+                CardView(content: gameCards[index])
                     .aspectRatio(2/3, contentMode: .fit)
             }
         }
-        .foregroundColor(.orange)
+        .foregroundColor(currentTheme.color)
+    }
+    
+    enum ThemeType {
+        case halloween, animals, food
+    }
+    
+    func selectTheme(_ theme: ThemeType) {
+        switch theme {
+        case .halloween:
+            currentTheme = Theme(
+                name: "Halloween",
+                emojis: ["👻", "🎃", "🕷️", "😈", "💀", "🧙‍♀️"],
+                color: .orange
+            )
+        case .animals:
+            currentTheme = Theme(
+                name: "Animals",
+                emojis: ["🐶", "🐱", "🐻", "🦁", "🐵"],
+                color: .yellow
+            )
+        case .food:
+            currentTheme = Theme(
+                name: "Food",
+                emojis: ["🍎", "🍇", "🍕", "🍟", "🍔", "🍤", "🍩"],
+                color: .brown
+            )
+        }
+        generateCards()
     }
 }
 
@@ -57,6 +122,14 @@ struct CardView: View {
     }
 }
 
+struct Theme {
+    let name: String
+    let emojis: [String]
+    let color: Color
+}
+
 #Preview {
     ContentView()
 }
+
+
